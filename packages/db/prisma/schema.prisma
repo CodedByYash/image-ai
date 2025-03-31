@@ -62,58 +62,55 @@ enum TransactionStatus {
 }
 
 model User {
-   id        String   @id @default(uuid())
-  clerkId   String   @unique
-  email     String   @unique
-  name      String?
-  profilePicture String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                         String                   @id           @default(uuid())
+  clerkId                    String                   @unique
+  email                      String                   @unique
+  name                       String?
+  profilePicture             String?
+  createdAt                  DateTime                               @default(now())
+  updatedAt                  DateTime                 @updatedAt
 }
 
 model Model {
-  id              String      @id   @default(uuid())
-  name            String
-  type            ModelTypeEnum
-  age             Int
-  ethinicity      EthenecityEnum  
-  eyeColor        EyeColorEnum
-  bald            Boolean
-  userId          String
-  trainingImages  TrainingImages[]
-  outputImages    OutputImages[]
+  id                         String                   @id           @default(uuid())
+  name                       String
+  age                        Int
+  bald                       Boolean
+  userId                     String
+  triggerWord                String?
+  tensorPath                 String?
+  zipUrl                     String
+  falAiRequestId             String?
+  ethinicity                 EthenecityEnum  
+  eyeColor                   EyeColorEnum
+  type                       ModelTypeEnum
+  outputImages               OutputImages[]
+  trainingStatus             ModelTrainingStatusEnum                @default(Pending)
+  @@index([falAiRequestId])
 }
-
-model TrainingImages{
-  id        String   @id @default(uuid())
-  imageUrl  String
-  modelId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  model Model @relation(fields: [modelId], references: [id])
-}
-
 model OutputImages{
-  id        String   @id @default(uuid())
-  imageUrl  String   @default("")
-  modelId   String
-  userId    String
-  prompt    String
-  status    OutputImageStatusEnum @default(Pending)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  model Model @relation(fields: [modelId], references: [id])
+  id                         String                  @id            @default(uuid())
+  imageUrl                   String                                 @default("")
+  modelId                    String
+  userId                     String
+  prompt                     String
+  falAiRequestId             String?
+  createdAt                  DateTime                               @default(now())
+  updatedAt                  DateTime                               @updatedAt
+  status                     OutputImageStatusEnum                  @default(Pending)
+  model                      Model                                  @relation(fields: [modelId], references: [id])
+  @@index([falAiRequestId])
 }
 
 model Packs{
-  id        String   @id @default(uuid())
-  name      String
-  prompts   PackPrompts[]
+  id                         String                  @id            @default(uuid())
+  name                       String
+  prompts                    PackPrompts[]
 }
 
 model PackPrompts{
-  id        String   @id @default(uuid())
-  prompt    String
-  packId    String
-  pack      Packs   @relation(fields: [packId], references: [id])
+  id                         String                  @id            @default(uuid())
+  prompt                     String
+  packId                     String
+  pack                       Packs                                  @relation(fields: [packId], references: [id])
 }
